@@ -1,0 +1,29 @@
+service: domain-migration
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
+
+  memorySize: 128
+  logRetentionInDays: 1
+  versionFunctions: false
+
+  stage: dev
+  region: ap-northeast-1
+
+package:
+  excludeDevDependencies: true
+  patterns:
+    - '!node_modules/**'
+    - handler.js
+
+functions:
+  hello:
+    handler: handler.redirect
+    events:
+      # REST API: http/https 둘다 받을 수 있는데 url에 stage붙음
+      # HTTP API: url은 깔끔한데 http를 받을 수 없다
+      - httpApi: '*'
